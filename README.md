@@ -88,3 +88,4 @@ MIT License - feel free to use and modify!
 
 Developed for Minecraft 1.16.5 anti-cheat detection
 "# smartac" 
+"# smartac" 
