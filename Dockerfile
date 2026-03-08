@@ -19,5 +19,5 @@ RUN python create_dummy_model.py
 # Expose port
 EXPOSE 8080
 
-# Start command
-CMD gunicorn api_server:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+# Start command - use shell form to allow variable substitution
+CMD ["sh", "-c", "gunicorn api_server:app --bind 0.0.0.0:${PORT:-8080} --workers 2 --timeout 120"]
