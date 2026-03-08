@@ -2,10 +2,10 @@
 nixPkgs = ["python311"]
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = ["python3 -m pip install -r requirements.txt"]
 
 [phases.build]
-cmds = ["python create_dummy_model.py"]
+cmds = ["python3 create_dummy_model.py"]
 
 [start]
 cmd = "gunicorn api_server:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
