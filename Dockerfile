@@ -10,13 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY api_server.py .
-COPY create_dummy_model.py .
 COPY train_model.py .
 
-# Create dummy model
-RUN python create_dummy_model.py
+# Note: Model will be downloaded from Google Drive on first start
+# No dummy model creation to avoid conflicts
 
 # Expose port
 EXPOSE 8080
-
-# Note: Railway will override this with railway.json startCommand

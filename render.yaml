@@ -2,7 +2,7 @@ services:
   - type: web
     name: smartac-api
     env: python
-    buildCommand: pip install -r requirements.txt && python create_dummy_model.py
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn api_server:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     plan: free
     healthCheckPath: /health
