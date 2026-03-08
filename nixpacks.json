@@ -1,0 +1,16 @@
+{
+  "phases": {
+    "setup": {
+      "nixPkgs": ["python311"]
+    },
+    "install": {
+      "cmds": ["python3 -m pip install --upgrade pip", "python3 -m pip install -r requirements.txt"]
+    },
+    "build": {
+      "cmds": ["python3 create_dummy_model.py"]
+    }
+  },
+  "start": {
+    "cmd": "gunicorn api_server:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+  }
+}
