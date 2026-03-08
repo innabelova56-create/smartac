@@ -27,7 +27,9 @@ def load_model():
             print(f"[{model_load_time.strftime('%H:%M:%S')}] Модель загружена успешно")
             return True
         else:
-            print(f"Файл модели не найден: {model_path}")
+            print(f"⚠️ Файл модели не найден: {model_path}")
+            print("Обучите модель командой: python train_model.py")
+            print("Или загрузите готовую модель в корень проекта")
             return False
     except Exception as e:
         print(f"Ошибка загрузки модели: {e}")
@@ -117,6 +119,34 @@ def reload():
         return jsonify({
             'status': 'error',
             'message': 'Failed to reload model'
+        }), 500
+
+@app.route('/train', methods=['POST'])
+def train():
+    """Train model endpoint - trains model from datasets folder"""
+    try:
+        import subprocess
+        result = subprocess.run(['python', 'train_model.py'], 
+                              capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            # Reload model after training
+            load_model()
+            return jsonify({
+                'status': 'success',
+                'message': 'Model trained successfully',
+                'output': result.stdout
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': 'Training failed',
+                'error': result.stderr
+            }), 500
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
         }), 500
 
 if __name__ == '__main__':
