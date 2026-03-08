@@ -15,10 +15,10 @@ app = Flask(__name__)
 # Глобальные переменные
 model = None
 model_load_time = None
-model_path = 'smartai_model.pkl'
+model_path = 'smartai_model_light.pkl'
 
-# Google Drive file ID
-GDRIVE_FILE_ID = '1Qd96KyRxyOy8-jFPUDNMkyOnP1BBqXH_'
+# Google Drive file ID (lighter model 95.6 MB)
+GDRIVE_FILE_ID = '1QE1pm0mz9hW9vRg2P3bNKIl0WOZj1nsB'
 
 def download_model_from_gdrive():
     """Скачивание модели с Google Drive используя gdown"""
