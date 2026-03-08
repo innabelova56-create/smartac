@@ -9,6 +9,7 @@ import joblib
 import numpy as np
 import os
 from datetime import datetime
+import urllib.request
 
 app = Flask(__name__)
 
@@ -17,20 +18,37 @@ model = None
 model_load_time = None
 model_path = 'smartai_model.pkl'
 
+# Google Drive direct download link
+GDRIVE_FILE_ID = '1Qd96KyRxyOy8-jFPUDNMkyOnP1BBqXH_'
+GDRIVE_DOWNLOAD_URL = f'https://drive.google.com/uc?export=download&id={GDRIVE_FILE_ID}'
+
+def download_model_from_gdrive():
+    """Скачивание модели с Google Drive"""
+    try:
+        print(f"Downloading model from Google Drive...")
+        urllib.request.urlretrieve(GDRIVE_DOWNLOAD_URL, model_path)
+        print(f"✓ Model downloaded successfully: {model_path}")
+        return True
+    except Exception as e:
+        print(f"✗ Failed to download model: {e}")
+        return False
+
 def load_model():
     """Загрузка или перезагрузка модели"""
     global model, model_load_time
     try:
-        if os.path.exists(model_path):
-            model = joblib.load(model_path)
-            model_load_time = datetime.now()
-            print(f"[{model_load_time.strftime('%H:%M:%S')}] Модель загружена успешно")
-            return True
-        else:
-            print(f"⚠️ Файл модели не найден: {model_path}")
-            print("Обучите модель командой: python train_model.py")
-            print("Или загрузите готовую модель в корень проекта")
-            return False
+        # Если модели нет - скачиваем с Google Drive
+        if not os.path.exists(model_path):
+            print(f"⚠️ Model file not found: {model_path}")
+            print("Attempting to download from Google Drive...")
+            if not download_model_from_gdrive():
+                print("⚠️ Failed to download model. Using dummy model.")
+                return False
+        
+        model = joblib.load(model_path)
+        model_load_time = datetime.now()
+        print(f"[{model_load_time.strftime('%H:%M:%S')}] Модель загружена успешно")
+        return True
     except Exception as e:
         print(f"Ошибка загрузки модели: {e}")
         return False
