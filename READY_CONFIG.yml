@@ -1,0 +1,236 @@
+# ╔═══════════════════════════════════════════════════════════════════════════════╗
+# ║                           SmartAI Configuration                               ║
+# ║                    ML Anti-Cheat with AI Detection                            ║
+# ║                         Готовый конфиг v1.0                                   ║
+# ╚═══════════════════════════════════════════════════════════════════════════════╝
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            GENERAL SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+# Enable debug mode for additional console output
+debug: false
+
+# Directory for saving data files
+outputDirectory: "datasets"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            DETECTION SETTINGS                                 │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+detection:
+  # Enable AI-based cheat detection
+  enabled: true
+  
+  # AI server endpoint (должен быть запущен: python api_server.py)
+  endpoint: "http://localhost:5000"
+  
+  # Number of ticks to collect per sample (40 тиков = 2 секунды)
+  sample-size: 40
+  
+  # Interval between samples (проверка каждые N ударов)
+  # Рекомендуется: 5-15 (меньше = чаще проверки, больше нагрузка)
+  sample-interval: 10
+  
+  # WorldGuard integration for region-based AI check bypass
+  worldguard:
+    # Enable WorldGuard region checking
+    enabled: false
+    
+    # List of regions where AI check is disabled
+    # Format: "world:region" or just "region" (applies to all worlds)
+    disabled-regions:
+      - "spawn"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                              ALERT SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+alerts:
+  # Probability threshold for sending alerts (0.0 - 1.0)
+  # Порог для начала накопления буфера и отправки алертов
+  # Рекомендуется: 0.70-0.80
+  threshold: 0.75
+  
+  # Send alerts to console
+  console: true
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            VIOLATION SETTINGS                                 │
+# │                  Система накопления нарушений (NEW!)                          │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+violation:
+  # VL threshold for triggering penalties
+  # Порог VL для наказания (пока не реализовано)
+  threshold: 40
+  
+  # VL reset value after penalty (should be threshold/2)
+  reset-value: 20
+  
+  # Buffer increase multiplier: (probability - threshold) * multiplier
+  # Множитель увеличения буфера для читеров
+  # Чем выше, тем быстрее растет вероятность
+  # Рекомендуется: 80-150
+  multiplier: 100.0
+  
+  # Buffer decay when probability < 0.1
+  # Скорость уменьшения буфера для легитных игроков
+  # Чем выше, тем быстрее падает вероятность
+  # Рекомендуется: 0.25-0.50
+  decay: 0.35
+  
+  # VL decay settings (reset VL when player is not in combat)
+  vl-decay:
+    enabled: false
+    interval: 1500  # seconds
+    amount: 1
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            PENALTY SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+penalties:
+  # Minimum probability required for penalty execution
+  min-probability: 0.01
+  
+  # Ban animation settings
+  animation:
+    enabled: true
+    duration: 80  # ticks (20 ticks = 1 second)
+  
+  # Actions by violation level
+  # Available prefixes: {KICK}, {BAN}, {CUSTOM_ALERT}
+  # Placeholders: {PLAYER}, {VL}, {PROBABILITY}, {BUFFER}
+  actions:
+    1: "{CUSTOM_ALERT} &c{PLAYER} &7is suspicious &8(&fVL:&e{VL}&8, &fProb:&e{PROBABILITY}&8)"
+    2: "{KICK} kick {PLAYER} SmartAI Detection (VL:{VL})"
+    3: "{BAN} ban {PLAYER} Cheating (SmartAI VL:{VL})"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            NAMETAG SETTINGS                                   │
+# │                         Голограммы над игроками                               │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+nametags:
+  # Enable holograms above players
+  enabled: true
+  
+  # Format (не используется, формат жестко задан в коде)
+  format: "&6▶ &7AVG: &f{AVG} &8| {HISTORY} &6◀"
+  
+  # Height offset above player (не используется, высота автоматическая)
+  height_offset: 1
+  
+  # Update interval in ticks (как часто обновлять позицию)
+  # 5 тиков = 0.25 секунды (плавное следование)
+  update_interval_ticks: 5
+  
+  # Color thresholds
+  colors:
+    low: "&a"        # < 0.6 (green) - легит
+    medium: "&6"     # 0.6-0.8 (orange) - подозрительно
+    high: "&c"       # 0.8-0.9 (red) - читер
+    critical: "&4"   # >= 0.9 (dark red) - 100% читер
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                              GUI SETTINGS                                     │
+# │                         (В разработке)                                        │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+gui:
+  title: "&cSmartAI &8> &7Suspects"
+  size: 54
+  items:
+    suspect_head:
+      name: "&c{PLAYER}"
+      lore:
+        - "&8&m------------------------"
+        - "&7AVG Probability: {AVG_PROB}"
+        - "&7History (Last {HISTORY_SIZE}):"
+        - "{HISTORY}"
+        - "&8&m------------------------"
+        - "&eLeft-Click to Teleport"
+        - "&eRight-Click to TP + Spectator"
+    previous_page:
+      material: ARROW
+      name: "&ePrevious Page (&f{PAGE}&e)"
+    next_page:
+      material: ARROW
+      name: "&eNext Page (&f{PAGE}&e)"
+    page_info:
+      material: PAPER
+      name: "&bPage &f{CURRENT} &7/ &f{TOTAL}"
+    filler:
+      material: GRAY_STAINED_GLASS_PANE
+      name: " "
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                         PRESET CONFIGURATIONS                                 │
+# │                  Готовые пресеты для разных ситуаций                          │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+# АГРЕССИВНЫЙ РЕЖИМ (быстрое обнаружение, больше ложных срабатываний):
+# alerts:
+#   threshold: 0.70
+# violation:
+#   multiplier: 150.0
+#   decay: 0.50
+# detection:
+#   sample-interval: 5
+
+# СБАЛАНСИРОВАННЫЙ РЕЖИМ (по умолчанию):
+# alerts:
+#   threshold: 0.75
+# violation:
+#   multiplier: 100.0
+#   decay: 0.35
+# detection:
+#   sample-interval: 10
+
+# КОНСЕРВАТИВНЫЙ РЕЖИМ (меньше ложных срабатываний, медленнее обнаружение):
+# alerts:
+#   threshold: 0.80
+# violation:
+#   multiplier: 80.0
+#   decay: 0.25
+# detection:
+#   sample-interval: 15
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                              NOTES                                            │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+# Как работает система накопления:
+# 
+# ДЛЯ ЧИТЕРОВ (вероятность > threshold):
+#   - Каждый удар увеличивает буфер: buffer += (prob - threshold) * multiplier
+#   - Буфер повышает отображаемую вероятность: display = prob + min(buffer/100, 0.3)
+#   - Результат: 0.68 → через 20 ударов → 0.95+
+#
+# ДЛЯ ЛЕГИТНЫХ (вероятность < 0.1):
+#   - Каждый удар уменьшает буфер: buffer -= decay
+#   - Низкий буфер понижает вероятность: display = prob - min(buffer/200, 0.15)
+#   - Результат: 0.40 → через 20 ударов → 0.15-0.20
+#
+# ДЛЯ СРЕДНИХ (0.1 - threshold):
+#   - Буфер не меняется
+#   - Вероятность остается как есть
+#
+# Подробнее: см. VIOLATION_SYSTEM.md
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                           QUICK START                                         │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+# 1. Запустите API сервер: python api_server.py
+# 2. Скопируйте этот конфиг в: plugins/SmartAI/config.yml
+# 3. Перезапустите сервер
+# 4. Проверьте: /smartai prob <player>
+# 5. Настройте пороги под свой сервер
+
+# Документация:
+# - START_SERVER.md - Как запустить
+# - VIOLATION_SYSTEM.md - Система накопления
+# - IMPROVE_MODEL.md - Улучшение точности
+# - FIX_FALSE_POSITIVES.md - Исправление ложных срабатываний

@@ -1,0 +1,66 @@
+# ╔═══════════════════════════════════════════════════════════════════════════════╗
+# ║                           SmartAI Messages                                    ║
+# ║                         Customizable Messages                                 ║
+# ╚═══════════════════════════════════════════════════════════════════════════════╝
+
+# Prefix for all messages
+prefix: "&6[SmartAI] &r"
+
+# Alert messages
+alerts-enabled: "&aAlerts enabled"
+alerts-disabled: "&eAlerts disabled"
+alert-format: "&c{PLAYER} &7| &6Prob: &f{PROBABILITY} &7| &6Buffer: &f{BUFFER}"
+alert-format-vl: "&c{PLAYER} &7| &6Prob: &f{PROBABILITY} &7| &6Buffer: &f{BUFFER} &7| &cVL: {VL}"
+
+# Command messages
+unknown-command: "&cUnknown command: &f{ARGS}"
+players-only: "&cThis command is for players only"
+no-permission: "&cYou don't have permission"
+player-not-found: "&cPlayer not found: &f{PLAYER}"
+config-reloaded: "&aConfiguration reloaded!"
+
+# Tracking messages
+tracking-stopped: "&eTracking stopped"
+tracking-started: "&aTracking player &f{PLAYER}&a. Use &f/smartai prob &aagain to stop"
+prob-usage: "&eUsage: &f/smartai prob <player>"
+player-offline: "&cPlayer is offline"
+actionbar-format: "&c{PLAYER} &7| &6Prob: &f{PROBABILITY} &7| &eBuffer: &f{BUFFER} &7| &2VL: &f{VL}"
+
+# Data collection messages
+data-status-header: "&e=== Data Collection Status ==="
+active-sessions: "&fActive sessions: &e{COUNT}"
+no-active-sessions: "&7No active data collection sessions"
+start-hint: "&7Use &e/smartai start <player|global> <cheat|legit> &7to start"
+session-started: "&aStarted &f{LABEL} &asession for &f{COUNT} &aplayer(s)"
+session-stopped: "&eStopped session for &f{PLAYER}"
+all-sessions-stopped: "&eStopped &f{COUNT} &esessions"
+no-sessions-to-stop: "&7No active sessions to stop"
+no-players-online: "&cNo players online"
+invalid-label: "&cInvalid label: &f{LABEL}"
+valid-labels: "&7Available labels: &aCHEAT, LEGIT"
+
+# Usage messages
+usage-header: "&eUsage:"
+usage-start: "&7  /smartai start <player|global> <cheat|legit> [customName]"
+usage-stop: "&7  /smartai stop <player|global>"
+usage-alerts: "&7  /smartai alerts - Toggle AI alerts"
+usage-prob: "&7  /smartai prob <player> - Track probability (actionbar)"
+usage-datastatus: "&7  /smartai datastatus - Data collection status"
+usage-reload: "&7  /smartai reload - Reload configuration"
+usage-suspects: "&7  /smartai suspects - Open the suspects GUI"
+usage-punish: "&7  /smartai punish <player> - Execute max punishment"
+
+# GUI messages
+suspects-teleport: "&aTeleported to {PLAYER}"
+suspects-teleport-spectator: "&aTeleported to {PLAYER} in Spectator mode"
+suspects-player-offline: "&cPlayer is no longer online."
+
+# Punishment messages
+punish-success: "&aExecuted max punishment on &f{PLAYER} &7(Action: {ACTION})"
+punish-no-action: "&cNo punishment actions configured."
+
+# Profile messages
+profile-header: "&e=== Profile: &f{PLAYER} &e==="
+profile-detections: "&7Detections (>0.8): &f{DETECTIONS}"
+profile-avg: "&7Average Probability: &f{AVG}"
+profile-last-check: "&7Last Check: &f{TIME}"

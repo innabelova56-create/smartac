@@ -1,0 +1,142 @@
+# ╔═══════════════════════════════════════════════════════════════════════════════╗
+# ║                           SmartAI Configuration                               ║
+# ║                    ML Anti-Cheat with AI Detection                            ║
+# ╚═══════════════════════════════════════════════════════════════════════════════╝
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            GENERAL SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+# Enable debug mode for additional console output
+debug: false
+
+# Directory for saving data files
+outputDirectory: "datasets"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            DETECTION SETTINGS                                 │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+detection:
+  # Enable AI-based cheat detection
+  enabled: true
+  
+  # AI server endpoint
+  endpoint: "http://localhost:5000"
+  
+  # Number of ticks to collect per sample
+  sample-size: 40
+  
+  # Interval between samples (in ticks)
+  sample-interval: 10
+  
+  # WorldGuard integration for region-based AI check bypass
+  worldguard:
+    # Enable WorldGuard region checking
+    enabled: false
+    
+    # List of regions where AI check is disabled
+    # Format: "world:region" or just "region" (applies to all worlds)
+    disabled-regions:
+      - "spawn"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                              ALERT SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+alerts:
+  # Probability threshold for sending alerts (0.0 - 1.0)
+  threshold: 0.75
+  
+  # Send alerts to console
+  console: true
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            VIOLATION SETTINGS                                 │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+violation:
+  # VL threshold for triggering penalties
+  threshold: 40
+  
+  # VL reset value after penalty (should be threshold/2)
+  reset-value: 20
+  
+  # Buffer increase multiplier: (probability - threshold) * multiplier
+  multiplier: 100.0
+  
+  # Buffer decay when probability < 0.1
+  decay: 0.35
+  
+  # VL decay settings (reset VL when player is not in combat)
+  vl-decay:
+    enabled: false
+    interval: 1500  # seconds
+    amount: 1
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            PENALTY SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+penalties:
+  # Minimum probability required for penalty execution
+  min-probability: 0.01
+  
+  # Ban animation settings
+  animation:
+    enabled: true
+    duration: 80  # ticks (20 ticks = 1 second)
+  
+  # Actions by violation level
+  # Available prefixes: {KICK}, {BAN}, {CUSTOM_ALERT}
+  # Placeholders: {PLAYER}, {VL}, {PROBABILITY}, {BUFFER}
+  actions:
+    1: "{CUSTOM_ALERT} &c{PLAYER} &7is suspicious &8(&fVL:&e{VL}&8, &fProb:&e{PROBABILITY}&8)"
+    2: "{KICK} kick {PLAYER} SmartAI Detection (VL:{VL})"
+    3: "{BAN} ban {PLAYER} Cheating (SmartAI VL:{VL})"
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                            NAMETAG SETTINGS                                   │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+nametags:
+  enabled: true
+  format: "&6▶ &7AVG: &f{AVG} &8| {HISTORY} &6◀"
+  height_offset: 0.2
+  update_interval_ticks: 5
+  colors:
+    low: "&a"        # < 0.6 (green)
+    medium: "&6"     # 0.6-0.8 (orange)
+    high: "&c"       # 0.8-0.9 (red)
+    critical: "&4"   # >= 0.9 (dark red)
+
+# ┌───────────────────────────────────────────────────────────────────────────────┐
+# │                              GUI SETTINGS                                     │
+# └───────────────────────────────────────────────────────────────────────────────┘
+
+gui:
+  title: "&cSmartAI &8> &7Suspects"
+  size: 54
+  items:
+    suspect_head:
+      name: "&c{PLAYER}"
+      lore:
+        - "&8&m------------------------"
+        - "&7AVG Probability: {AVG_PROB}"
+        - "&7History (Last {HISTORY_SIZE}):"
+        - "{HISTORY}"
+        - "&8&m------------------------"
+        - "&eLeft-Click to Teleport"
+        - "&eRight-Click to TP + Spectator"
+    previous_page:
+      material: ARROW
+      name: "&ePrevious Page (&f{PAGE}&e)"
+    next_page:
+      material: ARROW
+      name: "&eNext Page (&f{PAGE}&e)"
+    page_info:
+      material: PAPER
+      name: "&bPage &f{CURRENT} &7/ &f{TOTAL}"
+    filler:
+      material: GRAY_STAINED_GLASS_PANE
+      name: " "
