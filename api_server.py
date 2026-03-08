@@ -9,7 +9,6 @@ import joblib
 import numpy as np
 import os
 from datetime import datetime
-import urllib.request
 
 app = Flask(__name__)
 
@@ -18,15 +17,16 @@ model = None
 model_load_time = None
 model_path = 'smartai_model.pkl'
 
-# Google Drive direct download link
+# Google Drive file ID
 GDRIVE_FILE_ID = '1Qd96KyRxyOy8-jFPUDNMkyOnP1BBqXH_'
-GDRIVE_DOWNLOAD_URL = f'https://drive.google.com/uc?export=download&id={GDRIVE_FILE_ID}'
 
 def download_model_from_gdrive():
-    """Скачивание модели с Google Drive"""
+    """Скачивание модели с Google Drive используя gdown"""
     try:
-        print(f"Downloading model from Google Drive...")
-        urllib.request.urlretrieve(GDRIVE_DOWNLOAD_URL, model_path)
+        import gdown
+        print(f"Downloading model from Google Drive (ID: {GDRIVE_FILE_ID})...")
+        url = f'https://drive.google.com/uc?id={GDRIVE_FILE_ID}'
+        gdown.download(url, model_path, quiet=False)
         print(f"✓ Model downloaded successfully: {model_path}")
         return True
     except Exception as e:
