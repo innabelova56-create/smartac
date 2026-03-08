@@ -31,6 +31,9 @@ venv/
 env/
 *.h5
 
+# ML Models (too large for GitHub)
+*.pkl
+
 # Datasets
 plugins/SmartAI/datasets/*.csv
 
